@@ -55,7 +55,7 @@ struct fsl_mc_io {
 #include <stdint.h>
 #include <errno.h>
 #include <sys/uio.h>
-#include <linux/byteorder/little_endian.h>
+#include <asm/byteorder.h>
 
 
 #define mcdmb()	__asm__ __volatile__ ("" : : : "memory")

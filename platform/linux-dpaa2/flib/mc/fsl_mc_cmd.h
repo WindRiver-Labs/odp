@@ -32,7 +32,8 @@
 #ifndef __FSL_MC_CMD_H
 #define __FSL_MC_CMD_H
 
-#include <linux/byteorder/little_endian.h>
+//#include <linux/byteorder/little_endian.h>
+#include <asm/byteorder.h>
 #include "stdint.h"
 #include "fsl_mc_sys.h"
 
