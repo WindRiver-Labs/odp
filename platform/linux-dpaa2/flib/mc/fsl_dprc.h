@@ -116,7 +116,7 @@ int dprc_close(struct fsl_mc_io *mc_io,
  * @label: Object's label
  */
 struct dprc_cfg {
-	uint16_t icid;
+	uint32_t icid;
 	int portal_id;
 	uint64_t options;
 	char label[16];
@@ -242,7 +242,7 @@ int dprc_clear_irq_status(struct fsl_mc_io *mc_io,
  */
 struct dprc_attributes {
 	int container_id;
-	uint16_t icid;
+	uint32_t icid;
 	int portal_id;
 	uint64_t options;
 };
@@ -474,12 +474,14 @@ enum dprc_region_type {
  * @size: Region size (in bytes)
  * @flags: Region attributes
  * @type: Portal region type
+ * @base_address: Base address of the region
  */
 struct dprc_region_desc {
 	uint32_t base_offset;
 	uint32_t size;
 	uint32_t flags;
 	enum dprc_region_type type;
+	uint64_t base_address;
 };
 
 int dprc_get_obj_region(struct fsl_mc_io *mc_io,

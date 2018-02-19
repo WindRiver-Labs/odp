@@ -124,7 +124,7 @@ int dprc_create_container(struct fsl_mc_io *mc_io,
 					  cmd_flags, token);
 	cmd_params = (struct dprc_cmd_create_container *)cmd.params;
 	cmd_params->options = cpu_to_le32(cfg->options);
-	cmd_params->icid = cpu_to_le16(cfg->icid);
+	cmd_params->icid = cpu_to_le32(cfg->icid);
 	cmd_params->portal_id = cpu_to_le32(cfg->portal_id);
 	for (i = 0; i < 16; i++)
 		cmd_params->label[i] = cfg->label[i];
@@ -558,7 +558,7 @@ int dprc_get_attributes(struct fsl_mc_io *mc_io,
 	/* retrieve response parameters */
 	rsp_params = (struct dprc_rsp_get_attributes *)cmd.params;
 	attr->container_id = le32_to_cpu(rsp_params->container_id);
-	attr->icid = le16_to_cpu(rsp_params->icid);
+	attr->icid = le32_to_cpu(rsp_params->icid);
 	attr->options = le32_to_cpu(rsp_params->options);
 	attr->portal_id = le32_to_cpu(rsp_params->portal_id);
 
@@ -1216,8 +1216,11 @@ int dprc_get_obj_region(struct fsl_mc_io *mc_io,
 
 	/* retrieve response parameters */
 	rsp_params = (struct dprc_rsp_get_obj_region *)cmd.params;
-	region_desc->base_offset = le64_to_cpu(rsp_params->base_addr);
+	region_desc->base_offset = le64_to_cpu(rsp_params->base_offset);
 	region_desc->size = le32_to_cpu(rsp_params->size);
+	region_desc->type = rsp_params->type;
+	region_desc->flags = le32_to_cpu(rsp_params->flags);
+	region_desc->base_address = le64_to_cpu(rsp_params->base_address);
 
 	return 0;
 }

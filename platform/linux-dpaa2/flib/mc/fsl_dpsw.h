@@ -1262,4 +1262,21 @@ int dpsw_get_api_version(struct fsl_mc_io *mc_io,
 			   uint16_t *major_ver,
 			   uint16_t *minor_ver);
 
+struct dpsw_lag_cfg {
+	uint8_t group_id;
+	uint8_t num_ifs;
+	uint8_t if_id[8];
+};
+
+int dpsw_lag_set(struct fsl_mc_io *mc_io,
+				uint32_t cmd_flags,
+				uint16_t token,
+				const struct dpsw_lag_cfg *cfg);
+
+int dpsw_lag_get_cfg(struct fsl_mc_io *mc_io,
+				uint32_t cmd_flags,
+                uint16_t token,
+				uint8_t group_id,
+                struct dpsw_lag_cfg *cfg);
+
 #endif /* __FSL_DPSW_H */

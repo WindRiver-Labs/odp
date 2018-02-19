@@ -35,13 +35,15 @@
 
 /* Minimal supported DPRC Version */
 #define DPRC_VER_MAJOR			6
-#define DPRC_VER_MINOR			1
+#define DPRC_VER_MINOR			3
 
 /* Command versioning */
 #define DPRC_CMD_BASE_VERSION			1
+#define DPRC_CMD_VERSION_2			2
 #define DPRC_CMD_ID_OFFSET			4
 
 #define DPRC_CMD(id)	((id << DPRC_CMD_ID_OFFSET) | DPRC_CMD_BASE_VERSION)
+#define DPRC_CMD_V2(id)	(((id) << DPRC_CMD_ID_OFFSET) | DPRC_CMD_VERSION_2)
 
 /* Command IDs */
 #define DPRC_CMDID_CLOSE                        DPRC_CMD(0x800)
@@ -72,7 +74,7 @@
 #define DPRC_CMDID_GET_OBJ                      DPRC_CMD(0x15A)
 #define DPRC_CMDID_GET_RES_COUNT                DPRC_CMD(0x15B)
 #define DPRC_CMDID_GET_RES_IDS                  DPRC_CMD(0x15C)
-#define DPRC_CMDID_GET_OBJ_REG                  DPRC_CMD(0x15E)
+#define DPRC_CMDID_GET_OBJ_REG                  DPRC_CMD_V2(0x15E)
 #define DPRC_CMDID_SET_OBJ_IRQ                  DPRC_CMD(0x15F)
 #define DPRC_CMDID_GET_OBJ_IRQ                  DPRC_CMD(0x160)
 #define DPRC_CMDID_SET_OBJ_LABEL                DPRC_CMD(0x161)
@@ -101,8 +103,7 @@ struct dprc_cmd_open {
 
 struct dprc_cmd_create_container {
 	uint32_t options;
-	uint16_t icid;
-	uint16_t pad0;
+	uint32_t icid;
 	uint32_t pad1;
 	uint32_t portal_id;
 	uint8_t label[16];
@@ -189,8 +190,7 @@ struct dprc_cmd_clear_irq_status {
 
 struct dprc_rsp_get_attributes {
 	uint32_t container_id;
-	uint16_t icid;
-	uint16_t pad;
+	uint32_t icid;
 	uint32_t options;
 	uint32_t portal_id;
 };
@@ -332,8 +332,13 @@ struct dprc_cmd_get_obj_region {
 
 struct dprc_rsp_get_obj_region {
 	uint64_t pad;
-	uint64_t base_addr;
+	uint64_t base_offset;
 	uint32_t size;
+	uint8_t type;
+	uint8_t pad2[3];
+	uint32_t flags;
+	uint32_t pad3;
+	uint64_t base_address;
 };
 
 struct dprc_cmd_set_obj_label {

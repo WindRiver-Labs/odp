@@ -669,6 +669,9 @@ int dpci_set_rx_queue(struct fsl_mc_io *mc_io,
 	dpci_set_field(cmd_params->dest_type,
 		       DEST_TYPE,
 		       cfg->dest_cfg.dest_type);
+	dpci_set_field(cmd_params->dest_type,
+		       ORDER_PRESERVATION,
+		       cfg->order_preservation_en);
 
 	/* send command to mc*/
 	return mc_send_command(mc_io, &cmd);

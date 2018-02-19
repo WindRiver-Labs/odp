@@ -403,6 +403,16 @@ int dpdmux_if_get_link_state(struct fsl_mc_io *mc_io,
 			     uint16_t if_id,
 			     struct dpdmux_link_state *state);
 
+int dpdmux_if_set_default(struct fsl_mc_io *mc_io,
+		uint32_t cmd_flags,
+		uint16_t token,
+		uint16_t if_id);
+
+int dpdmux_if_get_default(struct fsl_mc_io *mc_io,
+		uint32_t cmd_flags,
+		uint16_t token,
+		uint16_t *if_id);
+
 int dpdmux_set_custom_key(struct fsl_mc_io *mc_io,
 			uint32_t cmd_flags,
 			uint16_t token,

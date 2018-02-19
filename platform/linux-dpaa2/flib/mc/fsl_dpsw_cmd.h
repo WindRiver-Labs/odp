@@ -34,7 +34,7 @@
 
 /* DPSW Version */
 #define DPSW_VER_MAJOR		8
-#define DPSW_VER_MINOR		1
+#define DPSW_VER_MINOR		2
 
 /* Command versioning */
 #define DPSW_CMD_BASE_VERSION	1
@@ -133,6 +133,8 @@
 #define DPSW_CMDID_CTRL_IF_SET_POOLS            DPSW_CMD(0x0A1)
 #define DPSW_CMDID_CTRL_IF_ENABLE               DPSW_CMD(0x0A2)
 #define DPSW_CMDID_CTRL_IF_DISABLE              DPSW_CMD(0x0A3)
+#define DPSW_CMDID_SET_LAG	             		DPSW_CMD(0x0A4)
+#define DPSW_CMDID_GET_LAG	             		DPSW_CMD(0x0A5)
 
 /* Macros for accessing command fields smaller than 1byte */
 #define DPSW_MASK(field)        \
@@ -851,5 +853,24 @@ struct dpsw_rsp_get_api_version {
 	uint16_t version_major;
 	uint16_t version_minor;
 };
+
+struct dpsw_cmd_lag {
+	uint8_t group_id;
+	uint8_t num_ifs;
+	uint8_t pad[6];
+	uint8_t if_id[8];
+};
+
+struct dpsw_cmd_get_lag {
+	uint8_t group_id;
+};
+
+struct dpsw_rsp_get_lag {
+	uint8_t group_id;
+	uint8_t num_ifs;
+	uint8_t pad[6];
+	uint8_t if_id[8];
+};
+
 #pragma pack(pop)
 #endif /* __FSL_DPSW_CMD_H */

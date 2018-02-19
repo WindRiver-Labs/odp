@@ -112,6 +112,10 @@ struct fsl_mc_io;
  * Order Point Records are shared for the entire TC
  */
 #define DPNI_OPT_OPR_PER_TC				0x000080
+/**
+ * All Tx traffic classes will use a single sender (ignore num_queueus for tx)
+ */
+#define DPNI_OPT_SINGLE_SENDER			0x000100
 
 /**
  * Software sequence maximum layout size
@@ -142,6 +146,7 @@ struct dpni_cfg {
 	 *		DPNI_OPT_SHARED_CONGESTION
 	 *		DPNI_OPT_HAS_KEY_MASKING
 	 *		DPNI_OPT_NO_FS
+	 *		DPNI_OPT_SINGLE_SENDER
 	 * @fs_entries: Number of entries in the flow steering table.
 	 *		This table is used to select the ingress queue for
 	 *		ingress traffic, targeting a GPP core or another.
@@ -449,6 +454,10 @@ int dpni_set_errors_behavior(struct fsl_mc_io *mc_io,
  * Select to modify the data-tail-room setting
  */
 #define DPNI_BUF_LAYOUT_OPT_DATA_TAIL_ROOM	0x00000040
+/**
+ * Select to modify the sw-opaque value setting
+ */
+#define DPNI_BUF_LAYOUT_OPT_SW_OPAQUE		0x00000080
 
 /**
  * struct dpni_buffer_layout - Structure representing DPNI buffer layout
@@ -468,6 +477,7 @@ struct dpni_buffer_layout {
 	int pass_timestamp;
 	int pass_parser_result;
 	int pass_frame_status;
+	int pass_sw_opaque;
 	uint16_t private_data_size;
 	uint16_t data_align;
 	uint16_t data_head_room;

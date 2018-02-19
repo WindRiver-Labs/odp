@@ -967,6 +967,69 @@ int dpdmux_if_get_link_state(struct fsl_mc_io *mc_io,
 }
 
 /**
+ * dpdmux_if_set_default - Set default interface
+ * @mc_io:	Pointer to MC portal's I/O object
+ * @cmd_flags:	Command flags; one or more of 'MC_CMD_FLAG_'
+ * @token: Token of DPSW object
+ * @if_id: interface id
+ *
+ * @returns	'0' on Success; Error code otherwise.
+ */
+int dpdmux_if_set_default(struct fsl_mc_io *mc_io,
+		uint32_t cmd_flags,
+		uint16_t token,
+		uint16_t if_id)
+{
+	struct dpdmux_cmd_if *cmd_params;
+	struct mc_command cmd = { 0 };
+
+	/* prepare command */
+	cmd.header = mc_encode_cmd_header(DPDMUX_CMDID_IF_SET_DEFAULT,
+					  cmd_flags,
+					  token);
+	cmd_params = (struct dpdmux_cmd_if *)cmd.params;
+	cmd_params->if_id = cpu_to_le16(if_id);
+
+	/* send command to mc*/
+	return mc_send_command(mc_io, &cmd);
+}
+
+/**
+ * dpdmux_if_get_default - Get default interface
+ * @mc_io:	Pointer to MC portal's I/O object
+ * @cmd_flags:	Command flags; one or more of 'MC_CMD_FLAG_'
+ * @token: Token of DPSW object
+ * @if_id: interface id
+ *
+ * @returns	'0' on Success; Error code otherwise.
+ */
+int dpdmux_if_get_default(struct fsl_mc_io *mc_io,
+		uint32_t cmd_flags,
+		uint16_t token,
+		uint16_t *if_id)
+{
+	struct dpdmux_cmd_if *rsp_params;
+	struct mc_command cmd = { 0 };
+	int err;
+
+	/* prepare command */
+	cmd.header = mc_encode_cmd_header(DPDMUX_CMDID_IF_GET_DEFAULT,
+					  cmd_flags,
+					  token);
+
+	/* send command to mc*/
+	err = mc_send_command(mc_io, &cmd);
+	if (err)
+		return err;
+
+	/* retrieve response parameters */
+	rsp_params = (struct dpdmux_cmd_if *)cmd.params;
+	*if_id = le16_to_cpu(rsp_params->if_id);
+
+	return 0;
+}
+
+/**
  * dpdmux_set_custom_key - Set a custom classification key.
  *
  * This API is only available for DPDMUX instance created with

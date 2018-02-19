@@ -2907,3 +2907,84 @@ int dpsw_get_api_version(struct fsl_mc_io *mc_io,
 
 	return 0;
 }
+
+/**
+* dpsw_lag_set_cfg() - Set LAG configuration
+* @mc_io:   Pointer to MC portal's I/O object
+* @cmd_flags:      Command flags; one or more of 'MC_CMD_FLAG_'
+* @token:   Token of DPSW object
+* @cfg:     pointer to LAG configuration
+*
+* Return:   '0' on Success; Error code otherwise.
+*/
+int dpsw_lag_set(struct fsl_mc_io *mc_io,
+                    uint32_t cmd_flags,
+                    uint16_t token,
+                    const struct dpsw_lag_cfg *cfg)
+{
+	struct dpsw_cmd_lag *cmd_params;
+	struct mc_command cmd = { 0 };
+	int i = 0;
+	/* prepare command */
+	cmd.header = mc_encode_cmd_header(DPSW_CMDID_SET_LAG,
+					  cmd_flags,
+					  token);
+	cmd_params = (struct dpsw_cmd_lag *)cmd.params;
+	cmd_params->group_id = cfg->group_id;
+	cmd_params->num_ifs = cfg->num_ifs;
+
+	for (i=0 ; i<cfg->num_ifs ; i++)
+	{
+		cmd_params->if_id[i] = cfg->if_id[i];
+	}
+
+	/* send command to mc*/
+	return mc_send_command(mc_io, &cmd);
+}
+
+/**
+* dpsw_lag_get_cfg() - Get LAG configuration.
+* @mc_io:   Pointer to MC portal's I/O object
+* @cmd_flags:      Command flags; one or more of 'MC_CMD_FLAG_'
+* @token:   Token of DPSW object
+* @grp_id:  LAG ID
+* @cfg:     pointer LAG configuration
+*
+* Return:   '0' on Success; Error code otherwise.
+*/
+int dpsw_lag_get_cfg(struct fsl_mc_io *mc_io,
+                    uint32_t cmd_flags,
+                    uint16_t token,
+					uint8_t group_id,
+                    struct dpsw_lag_cfg *cfg)
+{
+	
+	struct dpsw_cmd_get_lag *cmd_params;
+	struct dpsw_rsp_get_lag *rsp_params;
+	struct mc_command cmd = { 0 };
+	int err,i;
+
+	/* prepare command */
+	cmd.header = mc_encode_cmd_header(DPSW_CMDID_GET_LAG,
+					  cmd_flags,
+					  token);
+
+	cmd_params = (struct dpsw_cmd_get_lag *)cmd.params;
+	cmd_params->group_id = group_id;
+	
+	/* send command to mc*/
+	err = mc_send_command(mc_io, &cmd);
+	if (err)
+		return err;
+
+	/* retrieve response parameters */
+	rsp_params = (struct dpsw_rsp_get_lag *)cmd.params;
+	cfg->group_id = rsp_params->group_id;
+	cfg->num_ifs = rsp_params->num_ifs;
+	for (i=0 ; i<cfg->num_ifs ; i++)
+	{
+		cfg->if_id[i] = rsp_params->if_id[i];
+	}
+
+	return 0;
+}
