@@ -772,7 +772,7 @@ odp_buffer_hdr_t *pktin_dequeue(queue_entry_t *qentry)
 
 	return pkt_buf[0];
 }
-
+#if 0
 odp_buffer_hdr_t *sec_dequeue(queue_entry_t *qentry)
 {
 	dpaa2_mbuf_pt pkt_buf[1];
@@ -807,6 +807,7 @@ int sec_dequeue_multi(queue_entry_t *qentry, odp_buffer_hdr_t *pkt_buf[], int nu
 
 	return pkts;
 }
+#endif
 
 int pktin_enq_multi(queue_entry_t *qentry,
 		    odp_buffer_hdr_t *buf_hdr[],
@@ -1236,8 +1237,9 @@ int odp_pktin_queue_config(odp_pktio_t pktio,
 
 	switch (mode) {
 	case ODP_PKTIN_MODE_SCHED:
-
 		q_param.queue_param.type = ODP_QUEUE_TYPE_SCHED;
+		__attribute__ ((fallthrough));
+
 	case ODP_PKTIN_MODE_QUEUE:
 
 		for (i = 0; i < q_param.num_queues; i++) {
@@ -1377,7 +1379,7 @@ int odp_pktout_queue_config(odp_pktio_t pktio,
 	}
 
 	switch (mode) {
-	case ODP_PKTOUT_MODE_QUEUE:
+	case ODP_PKTOUT_MODE_QUEUE: 
 		for (i = 0; i < q_default_param.num_queues; i++) {
 			sprintf(name, "pktio%lu_outq_%d", odp_pktio_to_u64(pktio), i);
 			qentry = get_free_queue_entry();
@@ -1399,6 +1401,7 @@ int odp_pktout_queue_config(odp_pktio_t pktio,
 			qentry->s.status = QUEUE_STATUS_READY;
 			queue_unlock(qentry);
 		}
+		__attribute__ ((fallthrough));
 
 	case ODP_PKTOUT_MODE_DIRECT:
 		ret = dpaa2_eth_setup_tx_vq(ndev, q_default_param.num_queues, DPAA2BUF_TX_NO_ACTION);
@@ -1407,6 +1410,7 @@ int odp_pktout_queue_config(odp_pktio_t pktio,
 			goto failure;
 		}
 		pktio_entry->s.conf_tx_queues = q_default_param.num_queues;
+		break;
 
 	default:
 		break;

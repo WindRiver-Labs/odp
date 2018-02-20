@@ -420,7 +420,7 @@ int dpaa2_hwq_xmit(void *h_dpaa2_hwq,
 	/* Prepare each packet which is to be send */
 	for (loop = 0; loop < num; loop++) {
 		/* Convert dpaa2 buffer into frame descriptor */
-		DPAA2_SET_FD_ADDR((&fd), buf_list[loop]);
+		DPAA2_SET_FD_ADDR((&fd), (uint64_t)buf_list[loop]);
 		DPAA2_SET_FD_LEN((&fd), sizeof(struct dpaa2_mbuf));
 		/* Set DCA for freeing DQRR if required. We are saving
 		   DQRR entry index in buffer when using DQRR mode.

@@ -238,8 +238,6 @@ __LIB__libodp_linux_la_SOURCES = \
 			   odp_event.c \
 			   odp_init.c \
 			   odp_dpaa2_debug.c \
-			   odp_crypto.c \
-			   odp_ipsec.c \
 			   ../linux-generic/odp_impl.c \
 			   odp_packet.c \
 			   odp_packet_io.c \
@@ -270,7 +268,6 @@ __LIB__libodp_linux_la_SOURCES = \
 			   sdk/trace.c \
 			   sdk/dpaa2_main.c \
 			   sdk/dpaa2_io_portal.c \
-			   sdk/dpaa2_sec_ldpaa.c \
 			   sdk/dpaa2_ethdev_ldpaa.c \
 			   sdk/dpaa2_ethdev_priv_ldpaa.c \
 			   sdk/dpaa2_eth_ldpaa.c \

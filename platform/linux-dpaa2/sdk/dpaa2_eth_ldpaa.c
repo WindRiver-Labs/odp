@@ -704,7 +704,7 @@ static inline void dpaa2_eth_mbuf_to_sg_fd(
 
 	/*First Prepare FD to be transmited*/
 	/*Resetting the buffer pool id and offset field*/
-	fd->simple.bpid_offset = 0;
+	fd->simple.bpid = 0;
 	DPAA2_SET_FD_ADDR(fd, DPAA2_VADDR_TO_IOVA(
 		mbuf->hw_annot - DPAA2_FD_PTA_SIZE));
 	DPAA2_SET_FD_LEN(fd, mbuf->tot_frame_len);
@@ -736,7 +736,7 @@ static inline void dpaa2_eth_mbuf_to_contig_fd(
 		struct qbman_fd *fd)
 {
 	/*Resetting the buffer pool id and offset field*/
-	fd->simple.bpid_offset = 0;
+	fd->simple.bpid = 0;
 	DPAA2_SET_FD_ADDR(fd, DPAA2_VADDR_TO_IOVA(
 		mbuf->head - mbuf->priv_meta_off));
 	DPAA2_SET_FD_LEN(fd, mbuf->frame_len);
@@ -797,8 +797,8 @@ int32_t dpaa2_eth_xmit(struct dpaa2_dev *dev,
 					     eth_tx_vq->flow_id,
 					     eth_tx_vq->tc_index);
 			fd_arr[idx].simple.frc = 0;
-			DPAA2_RESET_FD_CTRL((&fd_arr[idx]));
-			DPAA2_SET_FD_FLC((&fd_arr[idx]), NULL);
+			DPAA2_RESET_FD_CTRL((struct qbman_fd *)(&fd_arr[idx]));
+			DPAA2_SET_FD_FLC((struct qbman_fd *)(&fd_arr[idx]), 0x0);
 
 			/* Set DCA for freeing DQRR if required. We are saving
 			   DQRR entry index in buffer when using DQRR mode.
@@ -870,7 +870,7 @@ int32_t dpaa2_eth_xmit_fqid(void *vq,
 	/*Clear the unused FD fields before sending*/
 	fd.simple.frc = 0;
 	DPAA2_RESET_FD_CTRL((&fd));
-	DPAA2_SET_FD_FLC((&fd), NULL);
+	DPAA2_SET_FD_FLC((&fd), 0);
 
 	/*Prepare each packet which is to be sent*/
 	for (loop = 0; loop < num; loop++) {

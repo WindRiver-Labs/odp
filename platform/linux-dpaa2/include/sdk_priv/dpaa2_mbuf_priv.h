@@ -27,51 +27,46 @@ extern "C" {
 #define MAX_BPID 256
 
 /*Macros to define operations on FD*/
-#define DPAA2_SET_FD_ADDR(fd, addr) {				\
-	fd->simple.addr_lo = lower_32_bits((uint64_t)addr);	\
-	fd->simple.addr_hi = upper_32_bits((uint64_t)addr); }
-#define DPAA2_SET_FD_LEN(fd, length)	fd->simple.len = length
-#define DPAA2_SET_FD_BPID(fd, bpid)	fd->simple.bpid_offset |= bpid;
-#define DPAA2_SET_FD_IVP(fd)   ((fd->simple.bpid_offset |= 0x00004000))
-#define DPAA2_SET_FD_OFFSET(fd, offset)	fd->simple.bpid_offset |= (uint32_t)offset << 16;
-#define DPAA2_SET_FD_INTERNAL_JD(fd, len) fd->simple.frc = (0x80000000 | (len));
-#define DPAA2_SET_FD_FRC(fd, frc)	fd->simple.frc = frc;
-#define DPAA2_RESET_FD_CTRL(fd)	fd->simple.ctrl = 0;
+#define DPAA2_SET_FD_ADDR(fd, addr) qbman_fd_set_addr(fd, addr)
+#define DPAA2_SET_FD_LEN(fd, length)	qbman_fd_set_len(fd, length)
+#define DPAA2_SET_FD_BPID(fd, bpid)	qbman_fd_set_bpid(fd, bpid)
+#define DPAA2_SET_FD_IVP(fd)   qbman_fd_set_bpid(fd, 0x4000)
+#define DPAA2_SET_FD_OFFSET(fd, offset)	qbman_fd_set_offset(fd, offset)
+#define DPAA2_SET_FD_INTERNAL_JD(fd, len) qbman_fd_set_frc(fd,(0x80000000 | len))
+#define DPAA2_SET_FD_FRC(fd, frc)	qbman_fd_set_frc(fd, frc)
+#define DPAA2_RESET_FD_CTRL(fd)		qbman_fd_set_ctrl(fd, 0)
 
-#define	DPAA2_SET_FD_ASAL(fd, asal)	(fd->simple.ctrl |= (asal << 16))
-#define DPAA2_SET_FD_FLC(fd, addr)				\
-	fd->simple.flc_lo = lower_32_bits((uint64_t)addr);	\
-	fd->simple.flc_hi = upper_32_bits((uint64_t)addr);
-#define DPAA2_SET_FLE_INTERNAL_JD(fle, len) fle->frc = (0x80000000 | (len));
-#define DPAA2_SET_FLE_OFFSET(fle, offset)	(fle->fin_bpid_offset |= (uint32_t)offset << 16);
-#define DPAA2_GET_FLE_ADDR(fle)					\
-	(uint64_t)((((uint64_t)(fle->addr_hi)) << 32) + fle->addr_lo)
-#define DPAA2_SET_FLE_ADDR(fle, addr)	\
-	fle->addr_lo = lower_32_bits((uint64_t)addr);     \
-	fle->addr_hi = upper_32_bits((uint64_t)addr);
-#define DPAA2_SET_FLE_BPID(fle, bpid)	fle->fin_bpid_offset |= (uint64_t)bpid;
-#define DPAA2_GET_FLE_BPID(fle, bpid)	(fle->fin_bpid_offset & 0x000000ff)
-#define DPAA2_SET_FLE_FIN(fle)	fle->fin_bpid_offset |= (uint64_t)1<<31;
+#define	DPAA2_SET_FD_ASAL(fd, asal)	qbman_fd_set_ctrl(fd, (asal << 16))
+#define DPAA2_SET_FD_FLC(fd, addr)	qbman_fd_set_flc(fd, addr)
+#define DPAA2_SET_FLE_INTERNAL_JD(fle, len) dpaa2_fl_set_len(fle, (0x80000000 | (len)))
+#define DPAA2_SET_FLE_OFFSET(fle, offset)	dpaa2_fl_set_offset(fle, offset)
+
+#define DPAA2_GET_FLE_ADDR(fle)		dpaa2_fl_get_addr(fle)
+#define DPAA2_SET_FLE_ADDR(fle, addr)	dpaa2_fl_set_addr(fle, addr)
+#define DPAA2_SET_FLE_BPID(fle, bpid)	dpaa2_fl_set_bpid(fle, bpid)
+#define DPAA2_GET_FLE_BPID(fle)		dpaa2_fl_get_bpid(fle)
+#define DPAA2_SET_FLE_FIN(fle)		dpaa2_fl_set_final(fle, 1)
+#define DPAA2_SET_FD_COMPOUND_FMT(fd)	qbman_fd_set_format(fd, 1)
+
+#define DPAA2_GET_FD_ADDR(fd)	qbman_fd_get_addr(fd)
+#define DPAA2_GET_FD_LEN(fd)	qbman_fd_get_len(fd)
+#define DPAA2_GET_FD_BPID(fd)	qbman_fd_get_bpid(fd)
+#define DPAA2_GET_FD_IVP(fd)	((qbman_fd_get_bpid(fd) & 0x4000) >> 14)
+#define DPAA2_GET_FD_OFFSET(fd)	qbman_fd_get_offset(fd)
+#define DPAA2_GET_FD_FRC(fd)	qbman_fd_get_frc(fd)
+#define DPAA2_GET_FD_FLC(fd)	qbman_fd_get_flc(fd)
+
+/* BE TODO */
 #define DPAA2_SET_FLE_SG_EXT(fle)	fle->fin_bpid_offset |= (uint64_t)1<<29;
 #define DPAA2_IS_SET_FLE_SG_EXT(fle)	\
 	(fle->fin_bpid_offset & ((uint64_t)1<<29))? 1 : 0
-#define DPAA2_SET_FLE_IVP(fle)   ((fle->fin_bpid_offset |= 0x00004000))
-#define DPAA2_SET_FD_COMPOUND_FMT(fd)	\
-	fd->simple.bpid_offset |= (uint32_t)1 << 28;
+#define DPAA2_SET_FLE_IVP(fle)   ((fle->fin_bpid_offset |= 0x4000))
 #define DPAA2_SET_FLC_EWS(flc)  flc->word1_bits23_16 |= 0x1
 #define DPAA2_SET_FLC_RSC(flc)  (flc->word1_bits31_24 |= 0x1)
 #define DPAA2_SET_FLC_REUSE_BS(flc) flc->mode_bits |= 0x8000
 #define DPAA2_SET_FLC_REUSE_FF(flc) flc->mode_bits |= 0x2000
 
-#define DPAA2_GET_FD_ADDR(fd)	\
-	(uint64_t)((((uint64_t)(fd->simple.addr_hi)) << 32) + fd->simple.addr_lo)
-#define DPAA2_GET_FD_LEN(fd)	(fd->simple.len)
-#define DPAA2_GET_FD_BPID(fd)	((fd->simple.bpid_offset & 0x00003FFF))
-#define DPAA2_GET_FD_IVP(fd)   ((fd->simple.bpid_offset & 0x00004000) >> 14)
-#define DPAA2_GET_FD_OFFSET(fd)	((fd->simple.bpid_offset & 0x0FFF0000) >> 16)
-#define DPAA2_GET_FD_FRC(fd)	(fd->simple.frc)
-#define DPAA2_GET_FD_FLC(fd)	\
-	(uint64_t)((((uint64_t)(fd->simple.flc_hi)) << 32) + fd->simple.flc_lo)
+
 #define GET_VIRT_ADDR_FROM_ZONE(addr, bz) ((addr - bz->phys_addr) + dpaa2_memzone_virt(bz))
 #define GET_PHY_ADDR_FROM_ZONE(addr, bz) (bz->phys_addr + ((uintptr_t)addr - dpaa2_memzone_virt(bz)))
 

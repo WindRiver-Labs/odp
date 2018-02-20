@@ -6,7 +6,6 @@
 
 #include <odp/api/event.h>
 #include <odp/api/buffer.h>
-#include <odp/api/crypto.h>
 #include <odp/api/packet.h>
 #include <odp/api/timer.h>
 #include <odp/api/pool.h>
@@ -33,9 +32,6 @@ void odp_event_free(odp_event_t event)
 		break;
 	case ODP_EVENT_TIMEOUT:
 		odp_timeout_free(odp_timeout_from_event(event));
-		break;
-	case ODP_EVENT_CRYPTO_COMPL:
-		odp_crypto_compl_free(odp_crypto_compl_from_event(event));
 		break;
 	case ODP_EVENT_IPSEC_RESULT:
 		/*Nothing as of now*/

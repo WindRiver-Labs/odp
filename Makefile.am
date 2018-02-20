@@ -8,8 +8,6 @@ AM_DISTCHECK_CONFIGURE_FLAGS = --enable-test-cpp \
 #@with_platform@ works alone in subdir but not as part of a path???
 SUBDIRS = @platform_with_platform@ \
 	  helper \
-	  test \
-	  helper/test \
 	  doc \
 	  example \
 	  scripts

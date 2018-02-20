@@ -1069,7 +1069,8 @@ static void event_handler(void *msg)
 	case DPAA2_DEBUG_PER_SA_STATS:
 		{
 			if ((event_msg->cmd) == DPAA2_DEBUG_CMD_GET)
-				odp_crypto_print_stats();
+				//odp_crypto_print_stats();
+				ODP_PRINT("Command not supported\n");
 			else {
 				ODP_PRINT("Command not supported\n");
 				return;

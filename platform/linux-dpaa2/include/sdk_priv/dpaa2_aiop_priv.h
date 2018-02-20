@@ -27,17 +27,14 @@ extern "C" {
 #define AIOP_MAX_FQ_PAIRS DPCI_PRIO_NUM
 
 /*AIOP specific macros to define operations on FD*/
-#define DPAA2_AIOP_SET_FD_FRC(fd, aiop_cnxt)			\
-	fd->simple.frc = aiop_cnxt->frc;
-#define DPAA2_AIOP_SET_FD_FLC(fd, aiop_cnxt)			\
-	fd->simple.flc_lo =					\
-		lower_32_bits((uint64_t)(aiop_cnxt->flc));	\
-	fd->simple.flc_hi =					\
-		upper_32_bits((uint64_t)(aiop_cnxt->flc));
-#define DPAA2_AIOP_SET_FD_ERR(fd, aiop_cnxt) fd->simple.ctrl |= aiop_cnxt->error;
-#define DPAA2_AIOP_GET_FRC(fd)	(fd->simple.frc)
-#define DPAA2_AIOP_GET_FLC(fd)	((uint64_t)(fd->simple.flc_hi) << 32) + fd->simple.flc_lo;
-#define DPAA2_AIOP_GET_ERR(fd)	(uint8_t)(fd->simple.ctrl & 0x000000FF)
+#define DPAA2_AIOP_SET_FD_FRC(fd, aiop_cnxt)	qbman_fd_set_frc(fd, aiop_cnxt->frc);
+#define DPAA2_AIOP_SET_FD_FLC(fd, aiop_cnxt)	qbman_fd_set_flc(fd, aiop_cnxt->flc);
+#define DPAA2_AIOP_SET_FD_ERR(fd, aiop_cnxt) \
+		qbman_fd_set_ctrl(fd, (qbman_fd_get_ctrl(fd) | aiop_cnxt->error))
+
+#define DPAA2_AIOP_GET_FRC(fd)	qbman_fd_get_frc(fd)
+#define DPAA2_AIOP_GET_FLC(fd)	qbman_fd_get_flc(fd)
+#define DPAA2_AIOP_GET_ERR(fd)	(uint8_t)(qbman_fd_get_ctrl(fd) & 0x000000FF)
 
 /*!
  * The DPAA2 Virtual Queue structure for AIOP driver.

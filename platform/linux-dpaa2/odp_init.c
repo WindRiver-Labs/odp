@@ -354,10 +354,6 @@ int odp_init_global(odp_instance_t *instance,
 		return -1;
 	}
 
-	if (odp_crypto_init_global()) {
-		ODP_ERR("ODP crypto init failed.\n");
-		return -1;
-	}
 	if (odp_classification_init_global()) {
 		ODP_ERR("ODP classification init failed.\n");
 		return -1;
@@ -393,10 +389,6 @@ int odp_term_global(odp_instance_t instance ODP_UNUSED)
 	}
 	if (odp_classification_term_global()) {
 		ODP_ERR("ODP classificatio term failed.\n");
-		rc = -1;
-	}
-	if (odp_crypto_term_global()) {
-		ODP_ERR("ODP crypto term failed.\n");
 		rc = -1;
 	}
 

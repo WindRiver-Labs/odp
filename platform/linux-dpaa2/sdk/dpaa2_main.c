@@ -235,8 +235,6 @@ int32_t dpaa2_init(struct dpaa2_init_cfg *cfg)
 
 	if (dpaa2_eth_driver_init())
 		goto failure;
-	if (dpaa2_sec_driver_init())
-		goto failure;
 	if (dpaa2_aiop_driver_init())
 		goto failure;
 	if (dpaa2_conc_driver_init())
@@ -268,7 +266,6 @@ void dpaa2_cleanup(void)
 	dpaa2_platform_exit();
 
 	dpaa2_eth_driver_exit();
-	dpaa2_sec_driver_exit();
 	dpaa2_aiop_driver_exit();
 	dpaa2_conc_driver_exit();
 	dpaa2_rts_exit();
