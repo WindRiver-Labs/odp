@@ -155,6 +155,8 @@ static inline enum mc_cmd_status mc_cmd_read_status(struct mc_command *cmd)
 static inline void mc_write_command(struct mc_command __iomem *portal,
 				    struct mc_command *cmd)
 {
+	struct mc_cmd_header *cmd_header = (struct mc_cmd_header *)&cmd->header;
+	char *header = (char *)&portal->header;
 	int i;
 
 	/* copy command parameters into the portal */
@@ -162,7 +164,8 @@ static inline void mc_write_command(struct mc_command __iomem *portal,
 		iowrite64(cmd->params[i], &portal->params[i]);
 
 	/* submit the command by writing the header */
-	iowrite64((cmd->header), &portal->header);
+	iowrite32(cmd_header->word[1], (((uint32_t *)header) + 1));
+	iowrite32(cmd_header->word[0], (uint32_t *)header);
 }
 
 /**
