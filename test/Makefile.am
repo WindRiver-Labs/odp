@@ -1,4 +1,4 @@
-SUBDIRS = performance miscellaneous
+SUBDIRS = 
 
 if BUILD_DPAA2
     SUBDIRS += debug
