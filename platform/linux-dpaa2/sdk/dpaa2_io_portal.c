@@ -248,8 +248,8 @@ int32_t dpaa2_io_portal_probe(ODP_UNUSED struct dpaa2_dev *dev,
 	/* Configure & setup SW portal */
 	p_des.block = NULL;
 	p_des.idx = attr.qbman_portal_id;
-	p_des.cena_bar = (void *)(dpio_dev->qbman_portal_ce_paddr);
-	p_des.cinh_bar = (void *)(dpio_dev->qbman_portal_ci_paddr);
+	p_des.cena_bar = (uint8_t *)(dpio_dev->qbman_portal_ce_paddr);
+	p_des.cinh_bar = (uint8_t *)(dpio_dev->qbman_portal_ci_paddr);
 	p_des.irq = -1;
 	DPAA2_INFO(FW, "Portal CE addr 0x%p\n", p_des.cena_bar);
 	DPAA2_INFO(FW, "Portal CI addr 0x%p\n", p_des.cinh_bar);
