@@ -147,7 +147,7 @@ static void vfio_unmap_irq_region(struct vfio_group *group)
 	if (ret)
 		DPAA2_ERR(FW, "Error in vfio_dma_unmap (errno = %d)", errno);
 }
-
+#if 0
 static int vfio_map_irq_region(struct vfio_group *group)
 {
 	int ret;
@@ -176,7 +176,7 @@ static int vfio_map_irq_region(struct vfio_group *group)
 	DPAA2_ERR(FW, "vfio_map_irq_region fails (errno = %d)", errno);
 	return -errno;
 }
-
+#endif
 int32_t vfio_dmamap_mem_region(uint64_t vaddr,
 				uint64_t iova,
 				uint64_t size)
@@ -255,7 +255,7 @@ static int32_t setup_dmamap(void)
 		DPAA2_ERR(FW, "Failed to read from /proc/version\n");
 		goto err;
 	}
-
+#if 0
 	if ((strstr(temp, "Linux version 4.1")) ||
 		(strstr(temp, "Linux version 4.4"))) {
 		ret = vfio_map_irq_region(group);
@@ -264,6 +264,7 @@ static int32_t setup_dmamap(void)
 			goto err;
 		}
 	}
+#endif
 	return DPAA2_SUCCESS;
 
 err:
