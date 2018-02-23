@@ -394,6 +394,7 @@ void dpaa2_aiop_mbuf_to_fd(
 	 * For performance reasons do not memset */
 	fd->simple.bpid = 0;
 	fd->simple.ctrl = 0;
+	fd->simple.format_offset = 0;
 
 	DPAA2_SET_FD_ADDR(fd, (uint64_t)mbuf->head);
 	DPAA2_SET_FD_LEN(fd, mbuf->frame_len);

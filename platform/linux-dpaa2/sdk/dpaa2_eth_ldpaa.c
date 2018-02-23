@@ -705,6 +705,8 @@ static inline void dpaa2_eth_mbuf_to_sg_fd(
 	/*First Prepare FD to be transmited*/
 	/*Resetting the buffer pool id and offset field*/
 	fd->simple.bpid = 0;
+	fd->simple.format_offset = 0;
+
 	DPAA2_SET_FD_ADDR(fd, DPAA2_VADDR_TO_IOVA(
 		mbuf->hw_annot - DPAA2_FD_PTA_SIZE));
 	DPAA2_SET_FD_LEN(fd, mbuf->tot_frame_len);
@@ -737,6 +739,8 @@ static inline void dpaa2_eth_mbuf_to_contig_fd(
 {
 	/*Resetting the buffer pool id and offset field*/
 	fd->simple.bpid = 0;
+	fd->simple.format_offset = 0;
+
 	DPAA2_SET_FD_ADDR(fd, DPAA2_VADDR_TO_IOVA(
 		mbuf->head - mbuf->priv_meta_off));
 	DPAA2_SET_FD_LEN(fd, mbuf->frame_len);
