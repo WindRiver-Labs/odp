@@ -1171,8 +1171,8 @@ int odp_platform_debug_init(void)
 	if (plat_debug_thd) {
 		memset(&debug_thread, 0, sizeof(debug_thread));
 		odp_cpumask_zero(&thd_mask);
-		/*TODO: */
-		odp_cpumask_set(&thd_mask, 0xff);
+		/* First CPU will always be active */
+		odp_cpumask_set(&thd_mask, 0x01);
 
 		pthread_attr_init(&debug_thread.attr);
 		pthread_attr_setaffinity_np(&debug_thread.attr,
