@@ -1,3 +1,3 @@
-SUBDIRS =  l3fwd reflector
-DIST_SUBDIRS =  l3fwd reflector
+SUBDIRS =  l3fwd reflector cmdif_demo
+DIST_SUBDIRS =  l3fwd reflector cmdif_demo
 

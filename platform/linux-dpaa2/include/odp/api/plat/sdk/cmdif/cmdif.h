@@ -12,10 +12,10 @@
 #include <odp/api/byteorder.h>
 #include <fsl_cmdif_flib_fd.h>
 
-#define CPU_TO_SRV16(val) odpfsl_bswap16(val)
-#define CPU_TO_SRV32(val) odpfsl_bswap32(val)
-#define CPU_TO_BE64(val)  odpfsl_bswap64(val)
-#define CPU_TO_BE16(val)  odpfsl_bswap16(val)
+#define CPU_TO_SRV16(val) odp_cpu_to_be_16(val)
+#define CPU_TO_SRV32(val) odp_cpu_to_be_32(val)
+#define CPU_TO_BE64(val)  odp_cpu_to_be_64(val)
+#define CPU_TO_BE16(val)  odp_cpu_to_be_16(val)
 
 #define CMDIF_EPID         0
 /*!< EPID to be used for setting by client */
@@ -35,10 +35,10 @@
 #endif /* COLD_CODE*/
 
 #ifndef CPU_TO_LE64
-#define CPU_TO_LE64(val) (val)
+#define CPU_TO_LE64(val) odp_cpu_to_le_64(val)
 #endif
 #ifndef CPU_TO_LE32
-#define CPU_TO_LE32(val) (val)
+#define CPU_TO_LE32(val) odp_cpu_to_le_32(val)
 #endif
 
 #define SHBP_BUF_TO_PTR(BUF) ((uint64_t *)(BUF))
